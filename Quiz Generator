@@ -1,0 +1,60 @@
+import random, os
+
+capitals = {
+    'United States': 'Washington, D.C.', 'Canada': 'Ottawa', 'United Kingdom': 'London',
+    'Germany': 'Berlin', 'France': 'Paris', 'Italy': 'Rome', 'Spain': 'Madrid',
+    'Australia': 'Canberra', 'Japan': 'Tokyo', 'China': 'Beijing', 'India': 'New Delhi',
+    'Brazil': 'Brasília', 'Mexico': 'Mexico City', 'Russia': 'Moscow', 'South Africa': 'Pretoria',
+    'Argentina': 'Buenos Aires', 'Egypt': 'Cairo', 'Turkey': 'Ankara', 'Saudi Arabia': 'Riyadh',
+    'South Korea': 'Seoul', 'Indonesia': 'Jakarta', 'Thailand': 'Bangkok', 'Malaysia': 'Kuala Lumpur',
+    'Singapore': 'Singapore', 'Philippines': 'Manila', 'Vietnam': 'Hanoi', 'New Zealand': 'Wellington',
+    'Greece': 'Athens', 'Netherlands': 'Amsterdam', 'Sweden': 'Stockholm', 'Switzerland': 'Bern',
+    'Norway': 'Oslo', 'Denmark': 'Copenhagen', 'Finland': 'Helsinki', 'Austria': 'Vienna',
+    'Ireland': 'Dublin', 'Portugal': 'Lisbon', 'Belgium': 'Brussels', 'Poland': 'Warsaw',
+    'Czech Republic': 'Prague', 'Hungary': 'Budapest', 'Ukraine': 'Kyiv', 'Israel': 'Jerusalem',
+    'Iran': 'Tehran', 'Iraq': 'Baghdad', 'Pakistan': 'Islamabad', 'Bangladesh': 'Dhaka',
+    'Sri Lanka': 'Sri Jayawardenepura Kotte', 'Chile': 'Santiago', 'Colombia': 'Bogotá'
+}
+
+# Set the directory where files will be saved
+os.chdir('C:\\Users\\Huawei\\New_folder\\text_file1')
+
+# Generate 35 quiz files
+for quiznum in range(35):
+    # Create the quiz and answer key files
+    quizfile = open(f'Capitals_question{quiznum + 1}.txt', 'w')
+    quizanswers = open(f'quizanswers{quiznum + 1}.txt', 'w')
+
+    # Write out the header for the quiz
+    quizfile.write("Name:\n\nSurname:\n\nAge:\n\n")
+    quizfile.write(' ' * 20 + f'Welcome to Quiz Game {quiznum + 1}')
+    quizfile.write('\n\n')
+
+    # Shuffle the order of the states
+    states = list(capitals.keys())
+    random.shuffle(states)
+
+    # Loop through all 50 states, making a question for each
+    for questionnum in range(50):
+        # Get the correct and wrong answers
+        correctAnswer = capitals[states[questionnum]]
+        wrong_answers = list(capitals.values())
+        del wrong_answers[wrong_answers.index(correctAnswer)]
+        wrong_answers = random.sample(wrong_answers, 3)
+
+        # Combine the correct answer with the wrong answers and shuffle them
+        answerOptions = wrong_answers + [correctAnswer]
+        random.shuffle(answerOptions)
+
+        # Write the question and answer options to the quiz file
+        quizfile.write(f"{questionnum + 1}. What is the capital of {states[questionnum]}?\n")
+        for i in range(4):
+            quizfile.write(f"  {'ABCD'[i]}. {answerOptions[i]}\n")
+        quizfile.write('\n')
+
+        # Write the correct answer to the answer key file
+        quizanswers.write(f"{questionnum + 1}. {'ABCD'[answerOptions.index(correctAnswer)]}\n")
+
+    # Close the files
+    quizfile.close()
+    quizanswers.close()
