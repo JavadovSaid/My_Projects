@@ -1,0 +1,25 @@
+import pyperclip
+import sys
+import shelve
+
+# Open a shelve file to store clipboard contents
+mcb_file = shelve.open('Test_1')
+
+# Check command-line arguments
+if len(sys.argv) == 3 and sys.argv[1].lower() == 'save':
+    # Save the clipboard content under the specified keyword
+    mcb_file[sys.argv[2]] = pyperclip.paste()
+
+elif len(sys.argv) == 2:
+    if sys.argv[1].lower() == 'list':
+        # Copy the list of saved keywords to the clipboard
+        pyperclip.copy(str(list(mcb_file.keys())))
+    elif sys.argv[1] in mcb_file:
+        # Copy the content associated with the specified keyword to the clipboard
+        pyperclip.copy(mcb_file[sys.argv[1]])
+
+# Close the shelve file
+mcb_file.close()
+
+
+
