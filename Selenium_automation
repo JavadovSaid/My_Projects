@@ -8,14 +8,14 @@ import time
 driver = webdriver.Chrome()
 
 # Login səhifəsini açın
-driver.get("https://e.lsu.edu.az/php/login.php")
+driver.get("Sayt_ünvanı")
 
 # Səhifənin yüklənməsi üçün vaxt ayırın
 time.sleep(2)  # Lazım gələrsə, vaxtı tənzimləyin
 
 # ID nömrənizi və şifrənizi daxil edin
 id_number = "ID_ömrəsi"  # Öz ID nömrənizlə əvəzləyin
-password = "Passüord"    # Öz şifrənizlə əvəzləyin
+password = "Password"    # Öz şifrənizlə əvəzləyin
 
 # ID və şifrə giriş sahələrini tapın
 id_input = driver.find_element(By.NAME, "user_id")  # Əgər "id" doğru ad deyilsə, yeniləyin
