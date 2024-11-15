@@ -14,8 +14,8 @@ driver.get("https://e.lsu.edu.az/php/login.php")
 time.sleep(2)  # Lazım gələrsə, vaxtı tənzimləyin
 
 # ID nömrənizi və şifrənizi daxil edin
-id_number = "26239"  # Öz ID nömrənizlə əvəzləyin
-password = "19761976"    # Öz şifrənizlə əvəzləyin
+id_number = "ID_ömrəsi"  # Öz ID nömrənizlə əvəzləyin
+password = "Passüord"    # Öz şifrənizlə əvəzləyin
 
 # ID və şifrə giriş sahələrini tapın
 id_input = driver.find_element(By.NAME, "user_id")  # Əgər "id" doğru ad deyilsə, yeniləyin
