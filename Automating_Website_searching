@@ -1,0 +1,91 @@
+import requests
+import webbrowser
+from bs4 import BeautifulSoup
+from tkinter import Tk, Label, Entry, Button, StringVar, IntVar, OptionMenu, messagebox
+
+
+def search_and_open():
+    # Get user inputs
+    site = site_var.get().lower()
+    query = query_var.get()
+    num_links = num_links_var.get()
+
+    if not query:
+        messagebox.showerror("Input Error", "Please enter search terms.")
+        return
+
+    # Construct URL based on selected site
+    if site == "google":
+        url = f'https://www.google.com/search?q={query}'
+    elif site == "bbc":
+        url = f'https://www.bbc.co.uk/search?q={query}'
+    elif site == "imgur":
+        url = f'https://imgur.com/search?q={query}'
+    else:
+        messagebox.showerror("Unsupported Site", "Please select a valid site: Google, BBC, or Imgur.")
+        return
+
+    print(f"Searching {site} for '{query}'...")
+
+    # Add headers for Imgur
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    } if site == "imgur" else None
+
+    try:
+        # Fetch the page content
+        res = requests.get(url, headers=headers)
+        res.raise_for_status()
+        soup = BeautifulSoup(res.text, 'html.parser')
+
+        # Parse valid links
+        valid_links = []
+        if site == "google":
+            for link in soup.select('a'):
+                href = link.get('href')
+                if href and not href.startswith('/search') and not href.startswith('#'):
+                    valid_links.append('https://www.google.com' + href)
+        elif site == "bbc":
+            valid_links = [a['href'] for a in soup.select('a') if a.get('href') and '/news/' in a['href']]
+        elif site == "imgur":
+            valid_links = [f"https://imgur.com{a['href']}" for a in soup.select('a.image-list-link') if a.get('href')]
+
+        # Open links in the browser
+        num_open = min(num_links, len(valid_links))
+        for i in range(num_open):
+            webbrowser.open(valid_links[i])
+
+        messagebox.showinfo("Search Complete", f"Opened {num_open} links for '{query}' on {site.capitalize()}.")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+
+# Initialize Tkinter GUI
+root = Tk()
+root.title("Search Automation Tool")
+
+# Site selection
+Label(root, text="Select Site:").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+site_var = StringVar(value="google")
+sites = ["Google", "BBC", "Imgur"]
+site_menu = OptionMenu(root, site_var, *sites)
+site_menu.grid(row=0, column=1, padx=10, pady=5)
+
+# Search terms
+Label(root, text="Search Terms:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+query_var = StringVar()
+query_entry = Entry(root, textvariable=query_var, width=40)
+query_entry.grid(row=1, column=1, padx=10, pady=5)
+
+# Number of links
+Label(root, text="Number of Links:").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+num_links_var = IntVar(value=5)
+num_links_entry = Entry(root, textvariable=num_links_var, width=10)
+num_links_entry.grid(row=2, column=1, padx=10, pady=5, sticky="w")
+
+# Search button
+search_button = Button(root, text="Search", command=search_and_open, bg="green", fg="white")
+search_button.grid(row=3, column=0, columnspan=2, pady=10)
+
+# Start the GUI loop
+root.mainloop()
