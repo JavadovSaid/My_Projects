@@ -1,0 +1,38 @@
+def task_manager():
+    print("Welcome to Task Manager! Available commands: 'add', 'remove', 'list', 'exit'")
+    tasks = []
+
+    while True:
+        command = input("Enter a command: ").strip().lower()
+
+        match command:
+            case 'add':
+                task = input("Enter a task to add: ").strip()
+                tasks.append(task)
+                print(f"Task '{task}' added.")
+            case 'remove':
+                if tasks:
+                    task = input("Enter a task to remove: ").strip()
+                    if task in tasks:
+                        tasks.remove(task)
+                        print(f"Task '{task}' removed.")
+                    else:
+                        print(f"Task '{task}' not found.")
+                else:
+                    print("No tasks to remove.")
+            case 'list':
+                if tasks:
+                    print("Your tasks:")
+                    for i, task in enumerate(tasks,1):
+                        print(f"{i}. {task}")
+                else:
+                    print("No tasks found.")
+            case 'exit':
+                print("Exiting Task Manager. Goodbye!")
+                break
+            case _:
+                print("Invalid command. Try again.")
+
+
+if __name__ == "__main__":
+    task_manager()
