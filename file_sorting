@@ -1,0 +1,29 @@
+import os
+import shutil
+
+# İstifadəçidən qovluğun yolunu soruş
+path = input("Qovluğun yolunu daxil edin: ")
+
+# Qovluqdakı bütün faylların siyahısını al
+files = os.listdir(path)
+
+for file in files:
+    # Fayl adını və uzantısını ayır
+    filename, extension = os.path.splitext(file)
+    extension = extension[1:]  # Uzantının əvvəlindəki nöqtəni sil
+
+    # Uzantısı olmayan faylları və ya qovluqları keç
+    if not extension:
+        continue
+
+    # Uzantıya əsasən qovluğun adını təyin et
+    folder_path = os.path.join(path, extension)
+
+    # Əgər qovluq mövcud deyilsə, onu yarat
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    # Faylı uyğun qovluğa köçür
+    shutil.move(os.path.join(path, file), os.path.join(folder_path, file))
+
+print("Fayllar uzantılarına görə qruplaşdırıldı!")
